@@ -13,7 +13,9 @@ register_hooks = {
     nn.Conv1d: count_convNd,
     nn.Conv2d: count_convNd,
     nn.Conv3d: count_convNd,
-    nn.ConvTranspose2d: count_convtranspose2d,
+    nn.ConvTranspose1d: count_convTransNd,
+    nn.ConvTranspose2d: count_convTransNd,
+    nn.ConvTranspose3d: count_convTransNd,
 
     nn.BatchNorm1d: count_bn,
     nn.BatchNorm2d: count_bn,
@@ -22,6 +24,7 @@ register_hooks = {
     nn.ReLU: count_relu,
     nn.ReLU6: count_relu,
     nn.LeakyReLU: count_relu,
+    nn.Sigmoid: count_relu,
 
     nn.MaxPool1d: zero_ops,
     nn.MaxPool2d: zero_ops,
@@ -29,6 +32,10 @@ register_hooks = {
     nn.AdaptiveMaxPool1d: zero_ops,
     nn.AdaptiveMaxPool2d: zero_ops,
     nn.AdaptiveMaxPool3d: zero_ops,
+
+    nn.MaxUnpool1d: zero_ops,
+    nn.MaxUnpool2d: zero_ops,
+    nn.MaxUnpool3d: zero_ops,
 
     nn.AvgPool1d: count_avgpool,
     nn.AvgPool2d: count_avgpool,

@@ -23,61 +23,18 @@ def count_convNd(m, x, y):
     total_ops = cin * output_elements * ops_per_element // m.groups
     m.total_ops = torch.Tensor([int(total_ops)])
 
-
-def count_conv2d(m, x, y):
+def count_convTransNd(m, x, y):
     x = x[0]
-
     cin = m.in_channels
     cout = m.out_channels
-    kh, kw = m.kernel_size
-    batch_size = x.size()[0]
 
-    out_h = y.size(2)
-    out_w = y.size(3)
-
-    # ops per output element
-    # kernel_mul = kh * kw * cin
-    # kernel_add = kh * kw * cin - 1
-    kernel_ops = multiply_adds * kh * kw
+    kernel_ops = m.weight.size()[2:].numel()
     bias_ops = 1 if m.bias is not None else 0
     ops_per_element = kernel_ops + bias_ops
+    output_elements = x.nelement() / cin
 
-    # total ops
-    # num_out_elements = y.numel()
-    output_elements = batch_size * out_w * out_h * cout
-    total_ops = output_elements * ops_per_element * cin // m.groups
-
+    total_ops = cout * output_elements * ops_per_element // m.groups
     m.total_ops = torch.Tensor([int(total_ops)])
-
-
-def count_convtranspose2d(m, x, y):
-    x = x[0]
-
-    cin = m.in_channels
-    cout = m.out_channels
-    kh, kw = m.kernel_size
-    # batch_size = x.size()[0]
-
-    out_h = y.size(2)
-    out_w = y.size(3)
-
-    # ops per output element
-    # kernel_mul = kh * kw * cin
-    # kernel_add = kh * kw * cin - 1
-    kernel_ops = multiply_adds * kh * kw * cin // m.groups
-    bias_ops = 1 if m.bias is not None else 0
-    ops_per_element = kernel_ops + bias_ops
-
-    # total ops
-    # num_out_elements = y.numel()
-    # output_elements = batch_size * out_w * out_h * cout
-    # ops_per_element = m.weight.nelement()
-
-    output_elements = y.nelement()
-    total_ops = output_elements * ops_per_element
-
-    m.total_ops = torch.Tensor([int(total_ops)])
-
 
 def count_bn(m, x, y):
     x = x[0]
